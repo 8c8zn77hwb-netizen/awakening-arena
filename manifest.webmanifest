@@ -1,0 +1,20 @@
+{
+  "name": "Pixel Fighters: Awakening Arena",
+  "short_name": "Awakening Arena",
+  "description": "A browser-based 2D pixel fighting game.",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#10131b",
+  "theme_color": "#10131b",
+  "icons": [
+    {
+      "src": "./assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
