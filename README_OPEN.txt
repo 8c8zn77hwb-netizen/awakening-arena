@@ -1,5 +1,8 @@
 像素格斗：觉醒擂台 - 跨平台打开说明
 
+公网网址：
+https://8c8zn77hwb-netizen.github.io/awakening-arena/
+
 最简单的方法：
 1. 不要只复制 index.html，要复制整个 pixel-fighters 文件夹。
 2. Windows：双击 start-windows.bat，或用 Chrome / Edge 打开 index.html。
