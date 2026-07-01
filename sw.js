@@ -1,4 +1,4 @@
-const CACHE_NAME = "awakening-arena-v6-scientist-face";
+const CACHE_NAME = "awakening-arena-v7-portal-duo-balance";
 const ASSETS = [
   "./",
   "./index.html",

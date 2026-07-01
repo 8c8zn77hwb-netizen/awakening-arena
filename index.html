@@ -2433,7 +2433,7 @@
       function fireDuoHomingLaser(f, target) {
         if (!isDuo(f) || f.duoMode !== "scientist" || f.awaken <= 0 || f.duoRocketTimer <= 0 || f.duoLaserCd > 0 || f.grounded || !target) return false;
         if (!spendStamina(f, 7)) return false;
-        f.duoLaserCd = 12;
+        f.duoLaserCd = 8;
         const dx = target.x - f.x;
         const dy = target.y - 58 - (f.y - 82);
         const len = Math.max(1, Math.hypot(dx, dy));
@@ -2441,15 +2441,16 @@
           kind: "laser",
           x: f.x + f.facing * 34,
           y: f.y - 92,
-          vx: (dx / len) * 13.5,
-          vy: (dy / len) * 9.5,
+          vx: (dx / len) * 18.5,
+          vy: (dy / len) * 12.8,
           owner: f,
           target,
-          life: 58,
+          life: 78,
           damage: 7.2 * attackMultiplier(f),
           knock: 4,
-          radius: 19,
-          homing: 0.58,
+          radius: 26,
+          homing: 0.78,
+          speed: 15.5,
           color: "#ff3c4e",
           color2: "#ffffff",
           hit: false
@@ -2471,7 +2472,7 @@
         const scientist = f.duoMode !== "boy";
         const awake = f.awaken > 0;
         if (scientist && awake) {
-          f.skillState = { type: "duoPurpleBarrage", timer: 210, lock: false, target, shotCd: 0 };
+          f.skillState = { type: "duoPurpleBarrage", timer: 150, lock: false, target, shotCd: 0 };
           f.skillCd = 270;
           addFloatingText(language === "zh" ? "紫色激光弹" : "Purple Barrage", f.x, f.y - 132, "#b777ff");
           playSfx("laser");
@@ -4057,7 +4058,9 @@
             const radius = p.radius || 22;
             const pbox = { left: p.x - radius, right: p.x + radius, top: p.y - radius, bottom: p.y + radius };
             if ((target && overlap(pbox, bodyBox(target))) || p.y >= GROUND - 18 || p.life <= 0) {
-              explodeAt(p.owner, p.x, Math.min(p.y, GROUND - 54), p.blastRadius || 92, p.damage, "missile", {
+              const blastX = p.forceTargetBlast && target ? clamp(target.x + rnd(-10, 10), 44, W - 44) : p.x;
+              const blastY = p.forceTargetBlast && target ? target.y - 58 : Math.min(p.y, GROUND - 54);
+              explodeAt(p.owner, blastX, blastY, p.blastRadius || 92, p.damage, "missile", {
                 color: p.color,
                 color2: p.color2,
                 knock: p.knock || 14,
@@ -4065,7 +4068,7 @@
                 shake: 15,
                 flash: 0.34
               });
-              fireworkBurst(p.x, Math.min(p.y, GROUND - 54), ["#55d6ff", "#f6d46e", "#ffffff"], 28);
+              fireworkBurst(blastX, blastY, ["#55d6ff", "#f6d46e", "#ffffff"], 28);
               projectiles.splice(i, 1);
             }
             continue;
@@ -4077,7 +4080,7 @@
             const len = Math.max(1, Math.hypot(dx, dy));
             p.vx += (dx / len) * p.homing;
             p.vy += (dy / len) * p.homing * 0.72;
-            const speed = p.kind === "swordBeam" ? 11.5 : 9;
+            const speed = p.speed || (p.kind === "swordBeam" ? 11.5 : 9);
             const current = Math.max(1, Math.hypot(p.vx, p.vy));
             p.vx = (p.vx / current) * Math.min(speed, current);
             p.vy = (p.vy / current) * Math.min(speed * 0.75, current);
@@ -4895,8 +4898,8 @@
         }
         if (scientist) {
           f.specialCd = 210;
-          f.skillState = { type: "duoEyeLaser", timer: 28, lock: true, target, hit: false };
-          addFloatingText(language === "zh" ? "雷射眼" : "Eye Laser", f.x, f.y - 136, "#7fd8ff");
+          f.skillState = { type: "duoEyeLaser", timer: 30, lock: true, target, hit: false };
+          addFloatingText(language === "zh" ? "雷射眼" : "Eye Laser", f.x, f.y - 136, "#ff2f45");
           playSfx("laser");
           return true;
         }
@@ -5360,7 +5363,7 @@
               owner: f,
               target,
               life: 46,
-              damage: 4.4 * attackMultiplier(f),
+              damage: 3.0 * attackMultiplier(f),
               knock: 2.8,
               radius: 14,
               color: "#b777ff",
@@ -5385,7 +5388,7 @@
           f.guard = false;
           if (frame % 2 === 0) {
             addEffect("slash", {
-              x: f.x + f.facing * 142,
+              x: f.x + f.facing * 196,
               y: f.y - 148,
               dir: f.facing,
               color: "#ff2f45",
@@ -5398,8 +5401,8 @@
           if (!s.hit && s.timer <= 15) {
             s.hit = true;
             const hitbox = f.facing > 0
-              ? { left: f.x + 18, right: f.x + 318, top: f.y - 164, bottom: f.y - 132 }
-              : { left: f.x - 318, right: f.x - 18, top: f.y - 164, bottom: f.y - 132 };
+              ? { left: f.x + 18, right: f.x + 438, top: f.y - 164, bottom: f.y - 132 }
+              : { left: f.x - 438, right: f.x - 18, top: f.y - 164, bottom: f.y - 132 };
             if (target && target.hp > 0 && overlap(hitbox, bodyBox(target))) {
               const hit = dealDamage(f, target, 18 * attackMultiplier(f), 10, "duoEyeLaser", f.x);
               if (hit) {
@@ -5569,18 +5572,19 @@
             s.shotCd = 13;
             projectiles.push({
               kind: "missile",
-              x: clamp(target.x + rnd(-110, 110), 48, W - 48),
+              x: clamp(target.x + rnd(-72, 72), 48, W - 48),
               y: 18,
-              vx: rnd(-0.6, 0.6),
-              vy: 5.2,
+              vx: rnd(-0.8, 0.8),
+              vy: 7.2,
               owner: f,
               target,
               life: 120,
-              damage: 14.5 * attackMultiplier(f),
-              knock: 9,
-              radius: 20,
-              blastRadius: 86,
-              homing: 0.58,
+              damage: 18.5 * attackMultiplier(f),
+              knock: 12,
+              radius: 30,
+              blastRadius: 132,
+              homing: 1.05,
+              forceTargetBlast: true,
               color: "#7fd8ff",
               color2: "#ff3c4e",
               hit: false
@@ -9725,6 +9729,7 @@
         const scientist = f.duoMode !== "boy";
         const awake = f.awaken > 0;
         const skillType = f.skillState ? f.skillState.type : "";
+        const scientistHandOut = scientist && projectiles.some((p) => p.kind === "duoHand" && p.owner === f);
 
         const drawPortalScreen = (pxx, pyy, size = 1, flip = 1) => {
           ctx.save();
@@ -9825,19 +9830,29 @@
           }
 
           if (cast || f.attack) {
-            drawRect(22, -132, 26 + frontReach, 9, "#f1f8ff");
-            drawRect(35 + frontReach, -138, 17, 17, "#e8c18f");
-            drawRect(45 + frontReach, -133, 30, 9, "#2a3148");
-            drawRect(70 + frontReach, -137, 15, 17, "#36ff8b");
-            drawRect(75 + frontReach, -132, 18, 7, "#ffffff");
+            if (scientistHandOut) {
+              drawRect(22, -132, 13, 28, "#f1f8ff");
+              drawRect(25, -106, 10, 11, "#d5e2ec");
+            } else {
+              drawRect(22, -132, 26 + frontReach, 9, "#f1f8ff");
+              drawRect(35 + frontReach, -138, 17, 17, "#e8c18f");
+              drawRect(45 + frontReach, -133, 30, 9, "#2a3148");
+              drawRect(70 + frontReach, -137, 15, 17, "#36ff8b");
+              drawRect(75 + frontReach, -132, 18, 7, "#ffffff");
+            }
             drawRect(-38, -124, 12, 50, "#f1f8ff");
             drawRect(-42, -79, 16, 14, "#e8c18f");
           } else {
             const arm = walking ? step * 8 : Math.sin(frame / 18) * 1.4;
             drawRect(-37 + arm * 0.2, -128, 11, 56, "#f1f8ff");
-            drawRect(26 - arm * 0.2, -128, 11, 55, "#f1f8ff");
             drawRect(-42 + arm, -77, 16, 14, "#e8c18f");
-            drawRect(26 - arm, -77, 16, 14, "#e8c18f");
+            if (scientistHandOut) {
+              drawRect(26 - arm * 0.2, -128, 11, 26, "#f1f8ff");
+              drawRect(27 - arm * 0.2, -105, 10, 10, "#d5e2ec");
+            } else {
+              drawRect(26 - arm * 0.2, -128, 11, 55, "#f1f8ff");
+              drawRect(26 - arm, -77, 16, 14, "#e8c18f");
+            }
           }
 
           drawRect(-16, -182, 32, 51, "#f0d6bd");
@@ -9863,12 +9878,12 @@
             ctx.shadowBlur = 18;
             drawRect(-13, -153, 8, 8, "#ff2f45");
             drawRect(5, -153, 8, 8, "#ff2f45");
-            drawRect(11, -153, 298, 8, "rgba(255,47,69,0.82)");
-            drawRect(11, -143, 298, 8, "rgba(255,47,69,0.72)");
-            drawRect(18, -151, 286, 3, "#fff1a8");
-            drawRect(18, -141, 286, 3, "#fff1a8");
-            drawRect(76, -165, 216, 4, "rgba(255,255,255,0.35)");
-            drawRect(96, -130, 196, 4, "rgba(255,47,69,0.35)");
+            drawRect(11, -153, 420, 8, "rgba(255,47,69,0.82)");
+            drawRect(11, -143, 420, 8, "rgba(255,47,69,0.72)");
+            drawRect(18, -151, 404, 3, "#fff1a8");
+            drawRect(18, -141, 404, 3, "#fff1a8");
+            drawRect(96, -165, 300, 4, "rgba(255,255,255,0.35)");
+            drawRect(116, -130, 280, 4, "rgba(255,47,69,0.35)");
             ctx.restore();
           }
           if (f.stun > 0 || f.hurtFlash > 0) {
