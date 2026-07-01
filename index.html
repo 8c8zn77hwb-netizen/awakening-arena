@@ -2484,14 +2484,15 @@
             kind: "duoHand",
             x: f.x + f.facing * 42,
             y: f.y - 88,
-            vx: f.facing * 13.8,
+            vx: f.facing * 15.2,
             vy: 0,
             owner: f,
             target,
-            life: 82,
+            life: 104,
             damage: 12 * attackMultiplier(f),
             knock: 5,
-            radius: 22,
+            radius: 30,
+            maxRange: 390,
             returning: false,
             grabbed: false,
             color: "#f1f8ff",
@@ -2521,12 +2522,14 @@
               vy: -2.2 - i * 0.2,
               owner: f,
               target,
-              life: 118,
-              damage: 9.2 * attackMultiplier(f),
-              knock: 7,
-              radius: 15,
-              blastRadius: 62,
-              homing: 0.5,
+              life: 132,
+              damage: 10.5 * attackMultiplier(f),
+              knock: 8,
+              radius: 24,
+              blastRadius: 96,
+              homing: 0.82,
+              speed: 13.2,
+              forceTargetBlast: true,
               color: "#ff6c4c",
               color2: "#7fd8ff",
               hit: false
@@ -3905,7 +3908,7 @@
             } else {
               p.x += p.vx;
               p.y += p.vy || 0;
-              if (Math.abs(p.x - owner.x) > 250 || p.life < 42) p.returning = true;
+              if (Math.abs(p.x - owner.x) > (p.maxRange || 250) || p.life < 42) p.returning = true;
               const radius = p.radius || 20;
               const pbox = { left: p.x - radius, right: p.x + radius, top: p.y - radius, bottom: p.y + radius };
               if (!p.hit && target && target.hp > 0 && overlap(pbox, bodyBox(target))) {
