@@ -1,4 +1,4 @@
-const CACHE_NAME = "awakening-arena-v1";
+const CACHE_NAME = "awakening-arena-v5-portal-duo";
 const ASSETS = [
   "./",
   "./index.html",
@@ -28,6 +28,21 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const url = new URL(event.request.url);
+  const isPageRequest = event.request.mode === "navigate" || url.pathname.endsWith("/") || url.pathname.endsWith("/index.html");
+  if (isPageRequest) {
+    event.respondWith(
+      fetch(event.request).then((response) => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, copy.clone());
+          cache.put("./index.html", copy);
+        });
+        return response;
+      }).catch(() => caches.match(event.request).then((cached) => cached || caches.match("./index.html")))
+    );
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
