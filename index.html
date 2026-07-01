@@ -5385,12 +5385,12 @@
           f.guard = false;
           if (frame % 2 === 0) {
             addEffect("slash", {
-              x: f.x + f.facing * 98,
-              y: f.y - 136,
+              x: f.x + f.facing * 142,
+              y: f.y - 148,
               dir: f.facing,
-              color: "#7fd8ff",
-              color2: "#ffffff",
-              size: 1.0,
+              color: "#ff2f45",
+              color2: "#fff1a8",
+              size: 1.35,
               life: 8,
               kind: "duoEyeLaser"
             });
@@ -5398,13 +5398,13 @@
           if (!s.hit && s.timer <= 15) {
             s.hit = true;
             const hitbox = f.facing > 0
-              ? { left: f.x + 18, right: f.x + 290, top: f.y - 158, bottom: f.y - 112 }
-              : { left: f.x - 290, right: f.x - 18, top: f.y - 158, bottom: f.y - 112 };
+              ? { left: f.x + 18, right: f.x + 318, top: f.y - 164, bottom: f.y - 132 }
+              : { left: f.x - 318, right: f.x - 18, top: f.y - 164, bottom: f.y - 132 };
             if (target && target.hp > 0 && overlap(hitbox, bodyBox(target))) {
               const hit = dealDamage(f, target, 18 * attackMultiplier(f), 10, "duoEyeLaser", f.x);
               if (hit) {
                 target.stun = Math.max(target.stun, 38);
-                fireworkBurst(target.x, target.y - 82, ["#7fd8ff", "#ffffff", "#36ff8b"], 24);
+                fireworkBurst(target.x, target.y - 82, ["#ff2f45", "#fff1a8", "#ffffff"], 24);
               }
             }
             playSfx("laser");
@@ -9810,7 +9810,6 @@
 
           drawRect(-25, -142, 50, 72, "#f1f8ff");
           drawRect(-18, -136, 36, 60, "#7fd8ff");
-          drawRect(-23, -118, 46, 8, "#ffffff");
           drawRect(-31, -76, 22, 70, "#e8eef5");
           drawRect(9, -76, 22, 70, "#ffffff");
           drawRect(-36, -112, 12, 88, "#f1f8ff");
@@ -9841,8 +9840,9 @@
             drawRect(26 - arm, -77, 16, 14, "#e8c18f");
           }
 
-          drawRect(-15, -174, 30, 38, "#f0d6bd");
-          drawRect(-18, -166, 36, 13, "rgba(70,55,70,0.38)");
+          drawRect(-16, -182, 32, 51, "#f0d6bd");
+          drawRect(-10, -132, 20, 8, "#f0d6bd");
+          drawRect(-18, -166, 36, 13, "rgba(70,55,70,0.28)");
           drawRect(-23, -185, 46, 14, "#8fe7ff");
           drawRect(-31, -190, 10, 26, "#8fe7ff");
           drawRect(-18, -202, 11, 33, "#a9f0ff");
@@ -9850,16 +9850,27 @@
           drawRect(11, -198, 11, 31, "#76d8f8");
           drawRect(24, -187, 9, 23, "#8fe7ff");
           drawRect(-20, -160, 40, 6, "#5aa9e8");
-          drawRect(-12, -150, 7, 9, "#10131b");
-          drawRect(5, -150, 7, 9, "#10131b");
-          drawRect(-15, -153, 12, 4, "#10131b");
-          drawRect(3, -153, 12, 4, "#10131b");
-          drawRect(-4, -145, 8, 9, "#d9a987");
-          drawRect(-9, -139, 18, 2, "#2b1114");
-          drawRect(-7, -136, 14, 3, "#ffffff");
-          drawRect(-5, -135, 2, 2, "#2b1114");
-          drawRect(1, -135, 2, 2, "#2b1114");
-          drawRect(10, -138, 6, 5, "#ffffff");
+          drawRect(-13, -154, 7, 10, "#10131b");
+          drawRect(6, -154, 7, 10, "#10131b");
+          drawRect(-15, -155, 12, 4, "#10131b");
+          drawRect(3, -155, 12, 4, "#10131b");
+          drawRect(-2, -147, 4, 13, "#d8a583");
+          drawRect(1, -136, 5, 2, "#b87962");
+          drawRect(-8, -129, 16, 2, "#2b1114");
+          if (skillType === "duoEyeLaser") {
+            ctx.save();
+            ctx.shadowColor = "#ff2f45";
+            ctx.shadowBlur = 18;
+            drawRect(-13, -153, 8, 8, "#ff2f45");
+            drawRect(5, -153, 8, 8, "#ff2f45");
+            drawRect(11, -153, 298, 8, "rgba(255,47,69,0.82)");
+            drawRect(11, -143, 298, 8, "rgba(255,47,69,0.72)");
+            drawRect(18, -151, 286, 3, "#fff1a8");
+            drawRect(18, -141, 286, 3, "#fff1a8");
+            drawRect(76, -165, 216, 4, "rgba(255,255,255,0.35)");
+            drawRect(96, -130, 196, 4, "rgba(255,47,69,0.35)");
+            ctx.restore();
+          }
           if (f.stun > 0 || f.hurtFlash > 0) {
             drawRect(-24, -212, 9, 6, "#f6d46e");
             drawRect(15, -216, 9, 6, "#f6d46e");
@@ -11476,19 +11487,20 @@
           r(-34, -57, 18, 53, "#e8eef5");
           r(-67, -91, 9, 50, "#f1f8ff");
           r(-18, -91, 9, 50, "#f1f8ff");
-          r(-49, -126, 25, 31, "#f0d6bd");
+          r(-50, -132, 27, 39, "#f0d6bd");
+          r(-46, -94, 19, 6, "#f0d6bd");
           r(-55, -136, 37, 10, "#8fe7ff");
           r(-60, -142, 8, 20, "#8fe7ff");
           r(-48, -152, 8, 26, "#a9f0ff");
           r(-36, -156, 8, 30, "#8fe7ff");
           r(-25, -148, 8, 23, "#76d8f8");
           r(-53, -114, 33, 5, "#5aa9e8");
-          r(-47, -107, 5, 7, "#10131b");
-          r(-34, -107, 5, 7, "#10131b");
-          r(-46, -109, 10, 3, "#10131b");
-          r(-35, -109, 10, 3, "#10131b");
-          r(-43, -101, 17, 2, "#2b1114");
-          r(-41, -98, 13, 2, "#ffffff");
+          r(-47, -114, 5, 7, "#10131b");
+          r(-34, -114, 5, 7, "#10131b");
+          r(-46, -116, 10, 3, "#10131b");
+          r(-35, -116, 10, 3, "#10131b");
+          r(-39, -106, 4, 9, "#d8a583");
+          r(-42, -93, 15, 2, "#2b1114");
           r(-7, -76, 26, 7, "#2a3148");
           r(14, -80, 10, 14, "#36ff8b");
           r(20, -76, 16, 5, "#ffffff");
