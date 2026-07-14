@@ -1,4 +1,4 @@
-const CACHE_NAME = "awakening-arena-v11-guan-yu";
+const CACHE_NAME = "awakening-arena-v12-guan-yu-polish";
 const ASSETS = [
   "./",
   "./index.html",
